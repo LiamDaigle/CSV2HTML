@@ -1,7 +1,10 @@
 package main;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 import exceptions.CSVAttributeMissing;
 import exceptions.CSVDataMissing;
@@ -14,10 +17,53 @@ public class Main {
 		
 	}
 	
-	public static void convertCSVtoHTML(/*Need to decide which parameters are necessary*/) throws CSVAttributeMissing, CSVDataMissing {
+	public static void convertCSVtoHTML(File file) throws CSVAttributeMissing, CSVDataMissing {
+		
+		Scanner sc = null;
+		int count = 0;
+		
+		try {
+			sc = new Scanner(new FileInputStream(file));
+		}
+		catch(Exception e) {
+			System.out.print("File not found. Terminating program.");
+			System.exit(0);
+		}
+		
+		while(sc.hasNextLine()) {
+			count++;
+		}
+		
+		String[][] array = new String[count][4];
+		
+		array[0][0] = sc.nextLine();
+		
+		sc.useDelimiter(",");
+		for(int i  = 1; i < count; i++) {
+				for(int j  = 0; j < 4; j++) {
+					if(sc.next() == "Note:") {
+						array[count][0] = sc.nextLine(); 
+					}
+					array[i][j] = sc.next();
+			}	
+		}
+		
+		try {
+			
+		}
 		
 		
-		PrintWriter output;
+		
+		
+		
+		
+		
+		
+		
+		
+			
+		PrintWriter output = null;
+				
 		try {
 			output = new PrintWriter(file);
 			output.println("<!DOCTYPE HTML>");
