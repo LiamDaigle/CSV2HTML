@@ -1,8 +1,10 @@
 package main;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -13,26 +15,28 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		
-		
 	}
 	
-	public static void convertCSVtoHTML(File file) throws CSVAttributeMissing, CSVDataMissing {
+	public static void convertCSVtoHTML(File f) throws CSVAttributeMissing, CSVDataMissing {
 		
+		BufferedReader br = null;
 		Scanner sc = null;
 		int count = 0;
 		
 		try {
-			sc = new Scanner(new FileInputStream(file));
-		}
+			br = new BufferedReader(new FileReader(f));
+			sc = new Scanner(new FileInputStream(f));
+			}
 		catch(Exception e) {
 			System.out.print("File not found. Terminating program.");
 			System.exit(0);
 		}
 		
-		while(sc.hasNextLine()) {
+		while(br.readLine() != null) {
 			count++;
 		}
+		
+		br.close();
 		
 		String[][] array = new String[count][4];
 		
@@ -47,21 +51,25 @@ public class Main {
 					array[i][j] = sc.next();
 			}	
 		}
-		
 		try {
-			
+			for(int k = 0; k < array.length; k++) {
+				for(int l = 0; l < array[k].length; l++) {
+					if(array[1][l] == " ") {
+						throw new CSVAttributeMissing("Attribute missing.");
+					}
+					if(k != 1 && array[k][l] == " ") {
+						throw new CSVDataMissing("Data Field missing.");
+					}
+				}
+			}
+		}
+		catch(CSVAttributeMissing a) {
+			System.out.print(a.getMessage());
+		}
+		catch(CSVDataMissing d) {
+			System.out.print(d.getMessage());
 		}
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-			
 		PrintWriter output = null;
 				
 		try {
