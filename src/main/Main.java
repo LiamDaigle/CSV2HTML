@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -14,7 +15,7 @@ import exceptions.CSVDataMissing;
 public class Main {
 
 	public static void main(String[] args) {
-		String filePath = "C:\\Users\\liamd\\Documents\\GitHub\\CSV2HTML\\src\\csv-files";
+		String filePath = "C:\\Users\\indig\\OneDrive\\Documents\\GitHub\\CSV2HTML\\src\\csv-files";
 		
 		File covidStats = new File(filePath + "\\covidStatistics-CSV format.csv");
 		File doctorList = new File(filePath + "\\doctorList-CSV format.csv");
@@ -23,31 +24,27 @@ public class Main {
 			convertCSVtoHTML(covidStats);
 			convertCSVtoHTML(doctorList);
 		} catch (CSVAttributeMissing e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CSVDataMissing e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
-		
-		
-		
 	}
-	
+	@SuppressWarnings("resource")
 	public static void convertCSVtoHTML(File f) throws CSVAttributeMissing, CSVDataMissing {
 		
 		BufferedReader br = null;
 		Scanner sc = null;
+		PrintWriter pw = null;
 		int count = 0;
 		
 		try {
 			br = new BufferedReader(new FileReader(f));
-			sc = new Scanner(new FileInputStream(f));
+			sc = new Scanner(new FileInputStream(f)).useDelimiter(",");
+			
 			while(br.readLine() != null) {
 				count++;
-				}
+			}
 			br.close();
 			}
 		catch(Exception e) {
@@ -55,23 +52,24 @@ public class Main {
 			System.exit(0);
 		}
 		
-		
-		
-		
-		
 		String[][] array = new String[count][4];
 		
-		array[0][0] = sc.nextLine();
+		array[0][0] = sc.next();
 		
-		sc.useDelimiter(",");
+		System.out.print(array[0][0]);
+		
 		for(int i  = 1; i < count; i++) {
 				for(int j  = 0; j < 4; j++) {
-					if(sc.next() == "Note:") {
-						array[count - 1][0] = sc.nextLine();
+					String value  = sc.next();
+					if(value.equals("Note:")) {
+						array[count-1][0] = value;
 					}
-					array[i][j] = sc.next();
+					array[i][j] = value;
+					System.out.print(array[i][j] + " ");
 			}	
 		}
+		sc.close();
+	
 		try {
 			for(int k = 0; k < array.length; k++) {
 				for(int l = 0; l < array[k].length; l++) {
@@ -86,10 +84,30 @@ public class Main {
 			}
 		}
 		catch(CSVAttributeMissing a) {
-			System.out.print(a.getMessage());
+			
+			try {
+				pw = new PrintWriter(new FileOutputStream("Exceptions.log"));
+			}
+			catch(FileNotFoundException e) {
+				System.out.print("File not found. Terminating program");
+				System.exit(0);
+			}
+			
+			pw.println(a.getMessage());
+			pw.close();
 		}
 		catch(CSVDataMissing d) {
-			System.out.print(d.getMessage());
+			
+			try {
+				pw = new PrintWriter(new FileOutputStream("Exceptions.log"));
+			}
+			catch(FileNotFoundException e) {
+				System.out.print("File not found. Terminating program");
+				System.exit(0);
+			}
+			
+			pw.println(d.getMessage());
+			pw.close();
 		}
 		
 		PrintWriter output;
