@@ -14,6 +14,25 @@ import exceptions.CSVDataMissing;
 public class Main {
 
 	public static void main(String[] args) {
+		String filePath = "C:\\Users\\liamd\\Documents\\GitHub\\CSV2HTML\\src\\csv-files";
+		
+		File covidStats = new File(filePath + "\\covidStatistics-CSV format.csv");
+		File doctorList = new File(filePath + "\\doctorList-CSV format.csv");
+		
+		try {
+			convertCSVtoHTML(covidStats);
+			convertCSVtoHTML(doctorList);
+		} catch (CSVAttributeMissing e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CSVDataMissing e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
 		
 	}
 	
@@ -26,17 +45,19 @@ public class Main {
 		try {
 			br = new BufferedReader(new FileReader(f));
 			sc = new Scanner(new FileInputStream(f));
+			while(br.readLine() != null) {
+				count++;
+				}
+			br.close();
 			}
 		catch(Exception e) {
 			System.out.print("File not found. Terminating program.");
 			System.exit(0);
 		}
 		
-		while(br.readLine() != null) {
-			count++;
-		}
 		
-		br.close();
+		
+		
 		
 		String[][] array = new String[count][4];
 		
@@ -46,7 +67,7 @@ public class Main {
 		for(int i  = 1; i < count; i++) {
 				for(int j  = 0; j < 4; j++) {
 					if(sc.next() == "Note:") {
-						array[count][0] = sc.nextLine(); 
+						array[count - 1][0] = sc.nextLine();
 					}
 					array[i][j] = sc.next();
 			}	
@@ -71,21 +92,45 @@ public class Main {
 			System.out.print(d.getMessage());
 		}
 		
-		PrintWriter output = null;
+		PrintWriter output;
 				
 		try {
-			output = new PrintWriter(file);
+			output = new PrintWriter("C:\\Users\\liamd\\Documents\\GitHub\\CSV2HTML\\src\\generated-html-files\\" + f.getName() + ".html");
 			output.println("<!DOCTYPE HTML>");
 			output.println("<html>");
 			output.println("<head><title> HTML Tables </title></head>");
 			output.println("<body>");
 			output.println("<table bgcolor = \"black\" align = \"center\" width = \"700\">");
 			
+			boolean titleWritten = false;
+			String noteTest = array[array.length - 1][0].substring(0,6);
+			boolean hasNote = noteTest.equals("Note:");
+			
 			for(int i = 0; i < array.length; i++) {
+				
 				output.println("<tr bgcolor = \"grey\" align = \"center\" width = \"200\">");
+				
 				for(int j = 0; j < array[i].length; j++) {
 					
-					output.println("<td>" + array[i][j] + "</td>");
+					if(i == 0 && titleWritten == false) {
+						output.println("<caption>" + array[i][j] + "</caption>");
+						titleWritten = true;
+					}
+					
+					else if(i == 0 || array[i][j].equals(null))
+						continue;
+					
+					else if(i == 1) {
+						output.println("<th>" + array[i][j] + "</th>");
+					}
+					
+					else if(i == array.length && hasNote == true)
+						output.println("<span>" + array[i][j] + "</span>");
+					
+					else {
+						output.println("<td>" + array[i][j] + "</td>");
+					}
+					
 				}
 				output.println("</tr>");
 			}
@@ -95,6 +140,8 @@ public class Main {
 			output.println("</html>");
 			
 			output.close();
+			
+			System.out.println("Program gets to the end without any errors!");
 			
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
