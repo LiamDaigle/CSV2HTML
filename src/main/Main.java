@@ -55,10 +55,11 @@ public class Main {
 			for(int k = 0; k < array.length; k++) {
 				for(int l = 0; l < array[k].length; l++) {
 					if(array[1][l] == " ") {
-						throw new CSVAttributeMissing("Attribute missing.");
+						throw new CSVAttributeMissing("ERROR: In file " + f.getName() + ". Missing attribute. File not converted to HTML.");
 					}
 					if(k != 1 && array[k][l] == " ") {
-						throw new CSVDataMissing("Data Field missing.");
+						throw new CSVDataMissing("ERROR: In file " + f.getName() + ". Line " + k + " is missing a value. File not converted to HTML."
+								+ " Missing data in " + (String) array[1][k] + ".");
 					}
 				}
 			}
