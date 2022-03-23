@@ -39,7 +39,7 @@ public class Main {
 		try {
 			sc = new Scanner(new FileInputStream(f)).useDelimiter(",");
 			
-			System.out.print(sc.nextLine());
+			System.out.println(sc.nextLine());
 			
 			int count = 0;
 			while(sc.hasNextLine()) {
@@ -47,7 +47,6 @@ public class Main {
 				System.out.print(token + " ");
 				count++;
 				if(count == 4) {
-					System.out.print(row);
 					row++;
 					count = 0;
 				}
@@ -57,7 +56,7 @@ public class Main {
 				}
 				if(row != 1 && token == " ")
 					throw new CSVDataMissing("ERROR: In file " + f.getName() + ". Line " + row + " is missing a value. File not converted to HTML.");
-				sc.close();
+			
 			}
 		}
 		catch(FileNotFoundException e) {
@@ -91,7 +90,7 @@ public class Main {
 			pw.close();
 		}
 	
-		
+		sc.close();
 		
 		
 		
