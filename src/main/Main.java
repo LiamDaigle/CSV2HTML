@@ -55,14 +55,14 @@ public class Main {
 			
 			
 			int count = 0;
+			System.out.println("Reading from " + f.getName() + "...");
+			System.out.println("Writing to " + htmlFile.getName() +"...");
 			while(sc.hasNextLine()) {
 				String token;
 				if(count == 3)
 					token = sc.nextLine();
 				else
 					token = sc.next();
-				
-				System.out.print(token + " ");
 				
 				if(count == 4) {
 					pw.println("</tr>");
