@@ -139,6 +139,8 @@ public class Main {
 			}
 			
 			pw.println(a.getMessage());
+			// Deleting the file
+			f.delete();
 			// Closing the PrintWriter object for Exceptions.log
 			pw.close();
 		}
@@ -154,6 +156,8 @@ public class Main {
 			}
 			
 			pw.println(d.getMessage());
+			// Deleting the file
+			f.delete();
 			// Closing the PrintWriter object for Exceptions.log
 			pw.close();
 		}
