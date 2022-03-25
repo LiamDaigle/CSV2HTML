@@ -12,25 +12,19 @@ import exceptions.CSVAttributeMissing;
 import exceptions.CSVDataMissing;
 
 public class Main {
-
+	static String filePath = "C:\\Users\\liamd\\Documents\\GitHub\\CSV2HTML\\src\\csv-files";
 	public static void main(String[] args) {
-		String filePath = "C:\\Users\\liamd\\Documents\\GitHub\\CSV2HTML\\src\\csv-files";
+		
 		
 		File covidStats = new File(filePath + "\\covidStatistics-CSV format.csv");
 		File doctorList = new File(filePath + "\\doctorList-CSV format.csv");
 		
-		try {
-			convertCSVtoHTML(covidStats);
-			convertCSVtoHTML(doctorList);
-		} catch (CSVAttributeMissing e) {
-			e.printStackTrace();
-		} catch (CSVDataMissing e) {
-			e.printStackTrace();
-		}
+		convertCSVtoHTML(covidStats);
+		convertCSVtoHTML(doctorList);
 		
 	}
 	@SuppressWarnings("resource")
-	public static void convertCSVtoHTML(File f) throws CSVAttributeMissing, CSVDataMissing {
+	public static void convertCSVtoHTML(File f){
 		
 		File htmlFile;
 		Scanner sc = null;
@@ -59,6 +53,8 @@ public class Main {
 			System.out.println("Writing to " + htmlFile.getName() +"...");
 			while(sc.hasNextLine()) {
 				String token;
+				
+				
 				if(count == 3)
 					token = sc.nextLine();
 				else
@@ -72,18 +68,21 @@ public class Main {
 				if(count == 0)
 					pw.println("<tr align = \"center\">");
 				if(row == 1) {
-					if(token == " ")
+					if(token.equals(" ") || token.equals("")) {
 						throw new CSVAttributeMissing("ERROR: In file " + f.getName() + ". Missing attribute. File not converted to HTML.");
+					}
 					else
 						pw.println("<th>" + token.replace(",", "") + "</th>");
 				}
 				if(row != 1) {
-					if(token == " ")
+					if(token.equals(" ") || token.equals("")) {
 						throw new CSVDataMissing("ERROR: In file " + f.getName() + ". Line " + row + " is missing a value. File not converted to HTML.");
+					}
 					else if(token.length() > 5 && token.substring(0,5).equals("Note:")) {
 						pw.println("</table>");
 						pw.println("<span>" + token + " </span>");
 						tableClosed = true;
+						break;
 					}
 					else
 						pw.println("<td>" + token.replace(",", "") + "</td>");
@@ -102,8 +101,9 @@ public class Main {
 		}
 		catch(CSVAttributeMissing a) {
 			
+			System.out.println("Catch");
 			try {
-				pw = new PrintWriter(new FileOutputStream("Exceptions.log"));
+				pw = new PrintWriter(new FileOutputStream(filePath + "Exceptions.log"));
 			}
 			catch(FileNotFoundException e) {
 				System.out.print("File not found. Terminating program");
@@ -116,7 +116,7 @@ public class Main {
 		catch(CSVDataMissing d) {
 			
 			try {
-				pw = new PrintWriter(new FileOutputStream("Exceptions.log"));
+				pw = new PrintWriter(new FileOutputStream(filePath + "Exceptions.log"));
 			}
 			catch(FileNotFoundException e) {
 				System.out.print("File not found. Terminating program");
