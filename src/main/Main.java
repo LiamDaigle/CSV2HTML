@@ -122,7 +122,8 @@ public class Main {
 		}
 		// Instructions of FileNotFound exception
 		catch(FileNotFoundException e) {
-			System.out.print("File not found. Terminating program.");
+			System.out.println("Could not open input file " + f.getName() + " for reading.");
+			System.out.println("Please check that the file exists and is readable. This program will terminate after closing any opened files.");
 			System.exit(0);
 		}
 		// Instructions of CSVAttributeMissing exception
