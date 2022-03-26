@@ -51,7 +51,10 @@ public class Main {
 		File htmlFile;
 		Scanner sc = null;
 		PrintWriter pw = null;
+		String[] array = new String[4];
+		int headerCount = 0;
 		int row = 1;
+		int missingColumn = -1;
 		
 		try {
 			
@@ -93,10 +96,15 @@ public class Main {
 				// if statement that verifies that the attributes have no missing variables, and if they do, throws a CSVAttributeMissing error
 				if(row == 1) {
 					if(token.equals(" ") || token.equals("")) {
+						missingColumn = count;
 						throw new CSVAttributeMissing("ERROR: In file " + f.getName() + ". Missing attribute. File not converted to HTML.");
 					}
-					else
+					else {
 						pw.println("<th>" + token.replace(",", "") + "</th>");
+						array[headerCount] = token.replace(",", "");
+						headerCount++;
+					}
+					
 				}
 				// if statement that verifies that the data values have no missing variables, and if they do, throws a CSVDataMissing error
 				if(row != 1) {
@@ -132,6 +140,7 @@ public class Main {
 			System.out.println("Catch");
 			try {
 				pw = new PrintWriter(new FileOutputStream(filePath + "Exceptions.log"), true);
+				
 			}
 			catch(FileNotFoundException e) {
 				System.out.print("File not found. Terminating program");
@@ -151,7 +160,7 @@ public class Main {
 				pw = new PrintWriter(new FileOutputStream(filePath + "Exceptions.log"), true);
 			}
 			catch(FileNotFoundException e) {
-				System.out.print("File not found. Terminating program");
+				System.out.print("WARNING: In file " + f.getName() + " line " + row + " is not converted to HTML: missing data: " + array[missingColumn]);
 				System.exit(0);
 			}
 			
